@@ -13,7 +13,7 @@
 }
 
 /* Full-width inputs */
-input[type=text], input[type=password],input[type=email] {
+input[type=text], input[type=password], input[type=email] {
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
@@ -45,11 +45,7 @@ button:hover {
   background-color: #f44336;
 }
 
-/* Center the avatar image inside this container */
-.imgcontainer {
-  text-align: center;
-  margin: 24px 0 12px 0;
-}
+
 
 /* Avatar image */
 img.avatar {
@@ -82,27 +78,28 @@ span.psw {
 </head>
 
 <body>
-<h1>This is the Login page</h1>
+<h1>This is the Register page</h1>
 
-<form action="/SampleServletProject/users" method="get">
- 
+<form action="/SampleServletProject/users" method="post">
 
   <div class="container">
-  
     <label for="email"><b>Email</b></label>
     <input type="email" placeholder="Enter Email" name="email" required>
 
     <label for="psw"><b>Password</b></label>
     <input type="password" placeholder="Enter Password" name="psw" required>
+   
+    <label for="name"><b>Full Name</b></label>
+    <input type="text" placeholder="Enter Full Name" name="name" required>
 
-    <button type="submit">Login</button>
+    <button type="submit">Register</button>
  
   </div>
   
  
 
   <div class="container" style="background-color:#f1f1f1">
-    <a type="button" href="registerUser.html" class="cancelbtn">Click here to Register</a>
+    <a type="button" href="index.html" class="cancelbtn">Click here to Login</a>
     <span class="psw">Forgot <a href="#">password?</a></span>
   </div>
 </form>
