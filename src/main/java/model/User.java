@@ -3,12 +3,12 @@ package model;
 public class User {
 	private String email,password,name;
 
-	User() {
+	public User() {
 		super();
 		
 	}
 
-	User(String email, String password, String name) {
+	public User(String email, String password, String name) {
 		super();
 		this.email = email;
 		this.password = password;

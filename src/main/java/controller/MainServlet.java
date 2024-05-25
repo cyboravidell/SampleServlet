@@ -2,142 +2,115 @@ package controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javax.servlet.Servlet;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import service.DBConnection;
+import exception.UserAlreadyExistException;
+import model.User;
+import service.UserService;
 
-/**
- * Servlet implementation class MainServlet
- */
-@WebServlet("/users")
 public class MainServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
+    private UserService userService;
+    private String owner;
+    private String chairman;
 
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
-	public MainServlet() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config); // Calls the init method of HttpServlet to perform default initialization
+        this.owner = config.getInitParameter("owner"); // Retrieves the "owner" parameter from web.xml
+    }
 
-	/**
-	 * @see Servlet#getServletConfig()
-	 */
-	public ServletConfig getServletConfig() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public MainServlet() {
+        super();
+        userService = new UserService();
+    }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		
-		String email = request.getParameter("email");
-		String password = request.getParameter("psw");
-		String name = request.getParameter("name");
-		int rows = -1;
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-		DBConnection db = new DBConnection();
+        User user = new User();
+        user.setEmail(request.getParameter("email"));
+        user.setPassword(request.getParameter("psw"));
 
-		try {
-			Connection conn = db.getConnection();
-//			String query = "insert into users(email,password,name) values("+email+","+password+","+name+")";
-			PreparedStatement ps = conn.prepareStatement("select * from users where email = ? and password = ?");
+        PrintWriter out = response.getWriter();
+        ServletContext servletContext = getServletConfig().getServletContext();
+        // Use the owner parameter
 
-			ps.setString(1, email);
-			ps.setString(2, password);
-		
+        chairman = servletContext.getInitParameter("chairman");
+        System.out.println("Owner: " + this.owner);
+        System.out.println("Chairman: " + this.chairman);
+        
+        //Now We are setting custom ServletContext attribute
+        
+        servletContext.setAttribute("user", new User("ravi@gmail.com", "Ravi1234", "Ravi Kumar"));
+        
+        try {
+            if (userService.userLogin(user)) {
+            	
+            	response.sendRedirect("/SampleServletProject/books");
+//                RequestDispatcher rd = request.getRequestDispatcher("/bims_home.html");
+//                rd.forward(request, response);
+            } else {
+                out.println("<h1> Login Failed </h1>");
+                out.println("<h1> "+ (User)servletContext.getAttribute("user")+" </h1>");
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            out.println("<h1> Login Failed </h1>");
+            e.printStackTrace();
+        }
+    }
 
-			ResultSet rs = ps.executeQuery();  
-			
-			boolean data = rs.next();
-			
-			response.setContentType("text/html;charset=UTF-8");
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-			PrintWriter out = response.getWriter();
-			
-			
-			if(data) {
-				System.out.println("Login Successful");  
-				System.out.println("Email = "+ rs.getString(1)+" Password = "+rs.getString(2)+" Name = "+rs.getString("name"));  
-				out.println("<h1> Login Successful </h1>");
-			}else {
-				out.println("<h1> Login Failed </h1>");
-			}
-			
-			
+        User user = new User();
 
-		} catch (ClassNotFoundException e) {
+        String email = request.getParameter("email");
+        user.setEmail(email);
 
-			System.out.println("JDBC Class Not found in your project");
+        String pass = request.getParameter("psw");
+        user.setPassword(pass);
 
-		} catch (SQLException e) {
+        String name = request.getParameter("name");
+        user.setName(name);
 
-			System.out.println("Db Connection Problem occurs in project");
-		}
-	}
+        response.setContentType("text/html;charset=UTF-8");
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+        PrintWriter out = response.getWriter();
 
-		String email = request.getParameter("email");
-		String password = request.getParameter("psw");
-		String name = request.getParameter("name");
-		int rows = -1;
+        int rows;
+        try {
+            rows = userService.userRegister(user);
+        } catch (ClassNotFoundException e) {
+            System.out.println("Driver class not loaded");
+            e.printStackTrace();
+            return;
+        } catch (SQLException e) {
+            System.out.println("either connection problem occurs or Query execution Failed");
+            e.printStackTrace();
+            return;
+        } catch (UserAlreadyExistException e) {
+            System.out.println(e.getMessage());
+            out.println("<h1> " + e.getMessage() + " </h1>");
+            return;
+        }
 
-		DBConnection db = new DBConnection();
-
-		try {
-			Connection conn = db.getConnection();
-//			String query = "insert into users(email,password,name) values("+email+","+password+","+name+")";
-			PreparedStatement ps = conn.prepareStatement("insert into users(email,password,name) values(?,?,?)");
-
-			ps.setString(1, email);
-			ps.setString(2, password);
-			ps.setString(3, name);
-
-			rows = ps.executeUpdate();
-
-		} catch (ClassNotFoundException e) {
-
-			System.out.println("JDBC Class Not found in your project");
-
-		} catch (SQLException e) {
-
-			System.out.println("Db Connection Problem occurs in project");
-		}
-
-		response.setContentType("text/html;charset=UTF-8");
-
-		PrintWriter out = response.getWriter();
-
-		if (rows > 0) {
-			System.out.println("User Registered Successfully");
-			out.println("<h1> User Registered Successfully </h1>");
-		} else {
-			System.out.println("User registration failed");
-			out.println("<h1> User Registered Failed </h1>");
-		}
-
-	}
-
+        if (rows > 0) {
+            System.out.println("User Registered Successfully");
+            out.println("<h1> User Registered Successfully </h1>");
+        } else {
+            System.out.println("User registration failed");
+            out.println("<h1> User Registration Failed </h1>");
+        }
+    }
 }
