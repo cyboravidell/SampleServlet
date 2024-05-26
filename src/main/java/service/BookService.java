@@ -38,4 +38,27 @@ public class BookService {
 
 	
 }
+
+	public boolean addNewBook(Book book) throws ClassNotFoundException, SQLException {
+		Connection conn = DBConnection.getConnection();
+
+		PreparedStatement ps = conn.prepareStatement("insert into book (title,author,price) values(?,?,?)");
+		
+		ps.setString(1, book.getTitle());
+		ps.setString(2, book.getAuthor());
+		ps.setDouble(3, book.getPrice());
+		
+		return ps.executeUpdate()>0;
+	}
+	
+	public boolean deleteBook(Book book) throws ClassNotFoundException, SQLException {
+		Connection conn = DBConnection.getConnection();
+
+		PreparedStatement ps = conn.prepareStatement("delete from book where title = ?");
+		
+		ps.setString(1, book.getTitle());
+		
+		
+		return ps.executeUpdate()>0;
+	}
 }
