@@ -79,8 +79,47 @@
 					</form>
 				</td>
 				<td><button  type="button" class="btn btn-primary" data-bs-toggle="modal"
-		data-bs-target="#addBookModal">Update</button></td>
+		data-bs-target="#updateBookModal_<%=i%>">Update</button></td>
 			</tr>
+			
+			<!-- Update book Modal -->
+	<div class="modal fade" id="updateBookModal_<%=i%>" tabindex="-1"
+		aria-labelledby="updateBookModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="updateBookModalLabel">Update Book</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form id="updateBookForm_<%=i%>" action="/SampleServletProject/books"
+						method="post" onsubmit="return submitUpdateForm();">
+						<input type="hidden" value="<%=book.getTitle()%>" name="oldTitle">
+						<input type="hidden" name="_method" value="PUT">
+						
+						<div class="mb-3">
+							<label for="bookName" class="form-label">Book Name</label> <input
+								type="text" class="form-control" id="bookTitle" name="title"
+								required>
+						</div>
+						<div class="mb-3">
+							<label for="author" class="form-label">Author</label> <input
+								type="text" class="form-control" id="author" name="author"
+								required>
+						</div>
+						<div class="mb-3">
+							<label for="price" class="form-label">Price</label> <input
+								type="number" class="form-control" id="price" name="price"
+								required>
+						</div>
+						<button type="submit" class="btn btn-primary">Add Book</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+			
 
 			<%
 			i = i + 1;
@@ -90,7 +129,7 @@
 		</tbody>
 	</table>
 
-	<!-- Modal -->
+	<!-- Add Book Modal -->
 	<div class="modal fade" id="addBookModal" tabindex="-1"
 		aria-labelledby="addBookModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
@@ -125,6 +164,42 @@
 			</div>
 		</div>
 	</div>
+	
+	<!-- Update book Modal -->
+	<div class="modal fade" id="updateBookModal" tabindex="-1"
+		aria-labelledby="updateBookModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="updateBookModalLabel">Update Book</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form id="updateBookForm" action="/SampleServletProject/books"
+						method="post">
+
+						<div class="mb-3">
+							<label for="bookName" class="form-label">Book Name</label> <input
+								type="text" class="form-control" id="bookTitle" name="title"
+								required>
+						</div>
+						<div class="mb-3">
+							<label for="author" class="form-label">Author</label> <input
+								type="text" class="form-control" id="author" name="author"
+								required>
+						</div>
+						<div class="mb-3">
+							<label for="price" class="form-label">Price</label> <input
+								type="number" class="form-control" id="price" name="price"
+								required>
+						</div>
+						<button type="submit" class="btn btn-primary">Add Book</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 
 
 	<script type="text/javascript">
@@ -135,6 +210,17 @@
 
 			xhr.open("POST", form.action, true);
 			xhr.setRequestHeader("X-HTTP-Method-Override", "DELETE");
+			
+			xhr.send(formData);
+			return false; // Prevent default form submission
+		}
+		function submitUpdateForm(index) {
+			var form = document.getElementById('updateBookForm_' + index);
+			var xhr = new XMLHttpRequest();
+			var formData = new FormData(form);
+
+			xhr.open("POST", form.action, true);
+			xhr.setRequestHeader("X-HTTP-Method-Override", "PUT");
 			
 			xhr.send(formData);
 			return false; // Prevent default form submission

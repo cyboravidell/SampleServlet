@@ -61,4 +61,19 @@ public class BookService {
 		
 		return ps.executeUpdate()>0;
 	}
+
+	public boolean updateBook(Book book, String oldTitle) throws ClassNotFoundException, SQLException {
+		Connection conn = DBConnection.getConnection();
+
+		PreparedStatement ps = conn.prepareStatement("update book set title=?, author=?, price=? where title = ?");
+		
+		ps.setString(1, book.getTitle());
+		ps.setString(2, book.getAuthor());
+		ps.setDouble(3, book.getPrice());
+		ps.setString(4, oldTitle);
+		
+		
+		return ps.executeUpdate()>0;
+		
+	}
 }

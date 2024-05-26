@@ -63,10 +63,16 @@ public class BookServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
 		String method = request.getParameter("_method");
+		
 		if (method != null && method.equalsIgnoreCase("DELETE")) {
 			doDelete(request, response);
-		} else {
+		}
+		else if(method != null && method.equalsIgnoreCase("PUT")) {
+			doPut(request, response);
+		}
+		else {
 			String title = request.getParameter("title");
 			String author = request.getParameter("author");
 			Double price = Double.parseDouble(request.getParameter("price"));
@@ -93,8 +99,26 @@ public class BookServlet extends HttpServlet {
 	 */
 	protected void doPut(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		String oldTitle = request.getParameter("oldTitle");
+		String title = request.getParameter("title");
+		String author = request.getParameter("author");
+		Double price = Double.parseDouble(request.getParameter("price"));
+		Book book = new Book(title, author, price);
+		PrintWriter out = response.getWriter();
+		try {
+			if (bookService.updateBook(book,oldTitle)) {
+				response.sendRedirect("/SampleServletProject/books");
+			} else {
+
+				out.print("<H1> Book Not Update </H1>");
+				return;
+			}
+		} catch (ClassNotFoundException | SQLException e) {
+			out.print("<H1> Book Not addded </H1>");
+			e.printStackTrace();
+		}
 	}
+	
 
 	/**
 	 * @see HttpServlet#doDelete(HttpServletRequest, HttpServletResponse)
