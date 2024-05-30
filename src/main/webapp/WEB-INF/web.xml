@@ -5,7 +5,7 @@
 	id="WebApp_ID" version="4.0">
 
 	<welcome-file-list>
-		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>
 
 	<context-param>
@@ -39,6 +39,24 @@
 		<servlet-name>SearchServlet</servlet-name>
 		<url-pattern>/Search_book</url-pattern>
 	</servlet-mapping>
-
+	
+	<filter>
+        <filter-name>AuthFilter</filter-name>
+        <filter-class>filter.AuthFilter</filter-class>
+    </filter>
+    
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/books</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/Search_book</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/logout</url-pattern>
+    </filter-mapping>
+    
 
 </web-app>

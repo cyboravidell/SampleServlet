@@ -84,7 +84,7 @@ span.psw {
 <body>
 <h1>This is the Login page</h1>
 
-<form action="/SampleServletProject/users" method="get">
+<form action="${pageContext.request.contextPath}/users" method="get">
  
 
   <div class="container">
@@ -102,9 +102,10 @@ span.psw {
  
 
   <div class="container" style="background-color:#f1f1f1">
-    <a type="button" href="registerUser.html" class="cancelbtn">Click here to Register</a>
+    <a type="button" href="/registerUser.jsp" class="cancelbtn">Click here to Register</a>
     <span class="psw">Forgot <a href="#">password?</a></span>
   </div>
+  
 </form>
 
 </body>

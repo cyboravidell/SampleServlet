@@ -80,7 +80,7 @@ span.psw {
 <body>
 <h1>This is the Register page</h1>
 
-<form action="/SampleServletProject/users" method="post">
+<form action="${pageContext.request.contextPath}/users" method="post">
 
   <div class="container">
     <label for="email"><b>Email</b></label>

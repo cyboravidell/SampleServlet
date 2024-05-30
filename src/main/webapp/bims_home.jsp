@@ -1,4 +1,6 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java"%>
+
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
 <%@ page import="java.util.List"%>
 <%@ page import="model.Book"%>
 <!DOCTYPE html>
@@ -38,7 +40,9 @@
                     <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
 			</div>
-			<a href="/SampleServletProject/logout" type="submit" class="btn btn-danger" >Logout</a>
+			
+		<!-- here we have added ${pageContext.request.contextPath} this fetch app context path automatically with the help of EL(Expression language) -->
+			<a href="${pageContext.request.contextPath}/logout" type="submit" class="btn btn-danger" >Logout</a>
 		</div>
 	</nav>
 
@@ -73,7 +77,7 @@
 				<td><%=book.getPrice()%></td>
 				<td>
 					<form id="deleteForm_<%=i%>"
-						action="/SampleServletProject/books" method="post"
+						action="${pageContext.request.contextPath}/books" method="post"
 						onsubmit="return submitDeleteForm();">
 						<input type="hidden" value="<%=book.getTitle()%>" name="title">
 						<input type="hidden" name="_method" value="DELETE">
@@ -95,7 +99,7 @@
 						aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<form id="updateBookForm_<%=i%>" action="/SampleServletProject/books"
+					<form id="updateBookForm_<%=i%>" action="${pageContext.request.contextPath}/books"
 						method="post" onsubmit="return submitUpdateForm();">
 						<input type="hidden" value="<%=book.getTitle()%>" name="oldTitle">
 						<input type="hidden" name="_method" value="PUT">
@@ -126,6 +130,8 @@
 			<%
 			i = i + 1;
 			}
+			
+			i=1;
 			%>
 
 		</tbody>
@@ -142,7 +148,7 @@
 						aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<form id="addBookForm" action="/SampleServletProject/books"
+					<form id="addBookForm" action="${pageContext.request.contextPath}/books"
 						method="post">
 
 						<div class="mb-3">

@@ -44,25 +44,20 @@ public class BookServlet extends HttpServlet {
 			doDelete(request, response);
 		}
 		try {
-			
-			Cookie[] cookies = request.getCookies();
-			if(cookies != null) {
-			for(Cookie ck: cookies) {
-				if(ck.getName() != null && ck.getName().equals("userEmail")) {
-					
-					List<Book> books = bookService.getAllBooks();
-					
-					request.setAttribute("books", books);
 
-					RequestDispatcher rd = request.getRequestDispatcher("/bims_home.jsp");
-					rd.forward(request, response);
-					return;
-				}
-			}}
 			
-				response.getWriter().print("<H1> you are unauthorized user </H1> <br>"
-						+ "<a href='/SampleServletProject/'> click here to login </a>");
+
+						List<Book> books = bookService.getAllBooks();
+
+						request.setAttribute("books", books);
+
+						RequestDispatcher rd = request.getRequestDispatcher("/bims_home.jsp");
+						rd.forward(request, response);
+						
+					
 				
+			
+
 			
 
 		} catch (ClassNotFoundException | SQLException e) {
@@ -77,16 +72,14 @@ public class BookServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
+
 		String method = request.getParameter("_method");
-		
+
 		if (method != null && method.equalsIgnoreCase("DELETE")) {
 			doDelete(request, response);
-		}
-		else if(method != null && method.equalsIgnoreCase("PUT")) {
+		} else if (method != null && method.equalsIgnoreCase("PUT")) {
 			doPut(request, response);
-		}
-		else {
+		} else {
 			String title = request.getParameter("title");
 			String author = request.getParameter("author");
 			Double price = Double.parseDouble(request.getParameter("price"));
@@ -120,7 +113,7 @@ public class BookServlet extends HttpServlet {
 		Book book = new Book(title, author, price);
 		PrintWriter out = response.getWriter();
 		try {
-			if (bookService.updateBook(book,oldTitle)) {
+			if (bookService.updateBook(book, oldTitle)) {
 				response.sendRedirect("/SampleServletProject/books");
 			} else {
 
@@ -132,7 +125,6 @@ public class BookServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
-	
 
 	/**
 	 * @see HttpServlet#doDelete(HttpServletRequest, HttpServletResponse)
