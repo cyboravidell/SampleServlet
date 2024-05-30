@@ -18,6 +18,8 @@
 	crossorigin="anonymous"></script>
 </head>
 <body>
+
+
 	<nav class="navbar navbar-expand-lg bg-body-tertiary">
 		<div class="container-fluid">
 			<a class="navbar-brand" href="#">Book Management System</a>
@@ -31,12 +33,12 @@
 				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 					<!-- Add your nav items here -->
 				</ul>
-				<form class="d-flex" role="search">
-					<input class="form-control me-2" type="search" placeholder="Search"
-						aria-label="Search">
-					<button class="btn btn-outline-success" type="submit">Search</button>
-				</form>
+				<form class="d-flex" role="search" action="/SampleServletProject/Search_book" method="get">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="title" name="title" required>
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
 			</div>
+			<a href="/SampleServletProject/logout" type="submit" class="btn btn-danger" >Logout</a>
 		</div>
 	</nav>
 

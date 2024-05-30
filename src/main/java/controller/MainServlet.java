@@ -8,6 +8,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -56,9 +57,11 @@ public class MainServlet extends HttpServlet {
         try {
             if (userService.userLogin(user)) {
             	
+            	//handing Session with cookies
+            	Cookie cookie = new Cookie("userEmail", user.getEmail());
+            	response.addCookie(cookie); //here we attach cookie to the response
             	response.sendRedirect("/SampleServletProject/books");
-//                RequestDispatcher rd = request.getRequestDispatcher("/bims_home.html");
-//                rd.forward(request, response);
+//                
             } else {
                 out.println("<h1> Login Failed </h1>");
                 out.println("<h1> "+ (User)servletContext.getAttribute("user")+" </h1>");
@@ -113,4 +116,6 @@ public class MainServlet extends HttpServlet {
             out.println("<h1> User Registration Failed </h1>");
         }
     }
+    
+    
 }

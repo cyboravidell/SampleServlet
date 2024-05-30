@@ -6,9 +6,9 @@ import java.sql.SQLException;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,7 +19,7 @@ import service.BookService;
 /**
  * Servlet implementation class BookServlet
  */
-@WebServlet(description = "This is for Book related operations", urlPatterns = { "/BookServlet" })
+@WebServlet(description = "This is for Book related operations", urlPatterns = { "/books" })
 public class BookServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -44,12 +44,26 @@ public class BookServlet extends HttpServlet {
 			doDelete(request, response);
 		}
 		try {
-			List<Book> books = bookService.getAllBooks();
+			
+			Cookie[] cookies = request.getCookies();
+			if(cookies != null) {
+			for(Cookie ck: cookies) {
+				if(ck.getName() != null && ck.getName().equals("userEmail")) {
+					
+					List<Book> books = bookService.getAllBooks();
+					
+					request.setAttribute("books", books);
 
-			request.setAttribute("books", books);
-
-			RequestDispatcher rd = request.getRequestDispatcher("/bims_home.jsp");
-			rd.forward(request, response);
+					RequestDispatcher rd = request.getRequestDispatcher("/bims_home.jsp");
+					rd.forward(request, response);
+					return;
+				}
+			}}
+			
+				response.getWriter().print("<H1> you are unauthorized user </H1> <br>"
+						+ "<a href='/SampleServletProject/'> click here to login </a>");
+				
+			
 
 		} catch (ClassNotFoundException | SQLException e) {
 			// TODO Auto-generated catch block

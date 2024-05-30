@@ -76,4 +76,34 @@ public class BookService {
 		return ps.executeUpdate()>0;
 		
 	}
+	
+	public List<Book> searchBook( String title) throws ClassNotFoundException, SQLException {
+	    Connection conn = DBConnection.getConnection();
+
+	    // Corrected SQL syntax with proper comma separation and spacing
+	  
+	    List<Book> books = new ArrayList<Book>();
+
+//		String query = "insert into users(email,password,name) values("+email+","+password+","+name+")";
+
+		PreparedStatement ps = conn.prepareStatement("select * from book where title like ? ");
+       ps.setString(1,title+'%');
+		ResultSet rs = ps.executeQuery();
+		
+		while(rs.next()){
+			Book book = new Book();
+		
+			book.setTitle(rs.getString("title"));
+			book.setAuthor(rs.getString("author"));
+			book.setPrice(rs.getDouble("price"));
+			
+			books.add(book);
+			
+			//System.out.println(book);
+		}
+
+		return books;
+	
+
+}
 }
